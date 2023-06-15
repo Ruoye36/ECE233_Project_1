@@ -1,12 +1,12 @@
 clear;
 %% Project 1
-N=64; % Number of antennas of the base station | 64 | 10
-M=16; % Number of antennas of each user | 16 | 10
+N=10; % Number of antennas of the base station | 64 | 10
+M=10; % Number of antennas of each user | 16 | 10
 K=1; % Number of users
-d=6; % Number data streams required by each user | 6 | 2 | 4
+d=2; % Number data streams required by each user | 6 | 2 | 4
 Ns=K*d; % Number of total data streams
 L=15; % Number of paths (paper suggests 15)
-SNR=-10:2:6;   % -10:2:6 | 0:5:30
+SNR=0:5:30;   % -10:2:6 | 0:5:30
 tolerance=1e-6;
 num_mc=100; %   Number of Monte Carlo trials | 100 | 1000
 phase_list=[1 exp(1j*pi)];
@@ -16,7 +16,7 @@ P=1;    % TODO change values to see if any effect
 H=zeros(N,M);   % TODO N*M or M*N?
 
 % Commented out for part D ↓
-N_RF_list=[Ns];    % Sec. IV assumes N_RF=Nt_RF=Nr_RF preserves generality
+N_RF_list=Ns;    % Sec. IV assumes N_RF=Nt_RF=Nr_RF preserves generality
 R_list=zeros(1,length(SNR));
 R_quant_list=zeros(1,length(SNR));
 % Commented out for part D ↑
@@ -291,20 +291,20 @@ end
 
 figure;
 plot(SNR,R_list);
+grid on;
 xlabel("SNR(dB)");
 ylabel("Spectral efficiency (bits/s/Hz)");
 legend("N^{RF}=N_{s}","N^{RF}=N_{s}+1","N^{RF}=N_{s}+3");
-title_text=["SNR vs. Spectral Efficiency (Infinite phase shifter, "  ]
-title("SNR vs. Spectral Efficiency (Infinite phase shifter, 64*16 MIMO, single user, Ns=6)");
+title("SNR vs. Spectral Efficiency (Infinite phase shifter, "+N+"*"+M+" MIMO, single user, Ns="+Ns+")");
 
-
-% !!! Change the parameters the same as Fig. 3 for this figure
+% Comment out for result 1 ↓
 figure;
 plot(SNR,R_quant_list);
+grid on;
 xlabel("SNR(dB)");
 ylabel("Spectral efficiency (bits/s/Hz)");
 legend("N^{RF}=N_{s}","N^{RF}=N_{s}+1","N^{RF}=N_{s}+3");
-title("SNR vs. Spectral Efficiency (1-bit phase shifter, 64*16 MIMO, single user, Ns=4)");
-
+title("SNR vs. Spectral Efficiency (1-bit phase shifter, "+N+"*"+M+" MIMO, single user, Ns="+Ns+")");
+% Comment out for result 1 ↑
 
 

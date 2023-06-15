@@ -30,7 +30,7 @@ R_quant_list=zeros(1,length(SNR));
 
 for i_nrf=1:length(N_RF_list)
 
-    N_RF=N_RF_list(i_nrf)
+    N_RF=N_RF_list(i_nrf);
     Nt_RF=N_RF;   % Number of transmit RF chains
     Nr_RF=N_RF;   % Number of receive RF chains
     % NOTE Nt_RF=Nr_RF=N_RF, the total number of RF chains is 2*N_RF which
@@ -44,14 +44,14 @@ for i_nrf=1:length(N_RF_list)
     
 
     for i_snr=1:length(SNR)
-        i_snr
+        %i_snr
         SNR_lin=10^(SNR(i_snr)/10);
         sigma=sqrt(P/SNR_lin);
         R=0;
         R_quant=0;
     
         for i_mc=1:num_mc
-            i_mc
+            %i_mc
             H=zeros(M,N);
             for l=1:L
                 alpha=sqrt(1/2)*(randn(1,1)+1j*randn(1,1));
@@ -242,11 +242,17 @@ for i_nrf=1:length(N_RF_list)
                                 eta_ij_quant=eta_ij_quant+G_j_quant(i,l)*W_RF_quant(l,j);
                             end
                         end
-                        if eta_ij_quant==0
-                            W_RF_quant(i,j)=1;
-                        else
-                            W_RF_quant(i,j)=eta_ij_quant/abs(eta_ij_quant);
+                        % 1-bit resolution phase shifter
+                        min_abs_sq=10000;
+                        W_RF_quant_min=W_RF(i,j);
+                        for i_phase=1:length(phase_list)
+                            candidate=abs(phase_list(i_phase)-eta_ij/abs(eta_ij))^2;
+                            if candidate<min_abs_sq
+                                min_abs_sq=candidate;
+                                W_RF_quant_min=phase_list(i_phase);
+                            end
                         end
+                        W_RF_quant(i,j)=W_RF_quant_min;
                     end
                 end
                 % Check convergence
