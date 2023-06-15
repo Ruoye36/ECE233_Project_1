@@ -1,32 +1,36 @@
 clear;
-%% Project 1 Part 4: IV.D Hybrid Beamforming Design for Ns<N_RF<2*Ns
-N=64; % Number of antennas of the base station | 64 | 10
-M=16; % Number of antennas of each user | 16 | 10
+%% Project 1
+N=10; % Number of antennas of the base station | 64 | 10
+M=10; % Number of antennas of each user | 16 | 10
 K=1; % Number of users
-d=4; % Number data streams required by each user | 6 | 2
+d=2; % Number data streams required by each user | 6 | 2 | 4
 Ns=K*d; % Number of total data streams
 L=15; % Number of paths (paper suggests 15)
-SNR=-10:2:6;   % -10:2:6 | 0:5:30
+SNR=0:5:30;   % -10:2:6 | 0:5:30
 tolerance=1e-6;
-num_mc=1000; %   Number of Monte Carlo trials
+num_mc=100; %   Number of Monte Carlo trials | 100 | 1000
 phase_list=[1 exp(1j*pi)];
 P=1;    % TODO change values to see if any effect
 
 % Complex channel
 H=zeros(N,M);   % TODO N*M or M*N?
 
-%N_RF=Ns;    % Sec. IV assumes N_RF=Nt_RF=Nr_RF preserves generality
-N_RF_list=[Ns, Ns+1, Ns+3];
+% Commented out for part D ↓
+N_RF_list=Ns;    % Sec. IV assumes N_RF=Nt_RF=Nr_RF preserves generality
+R_list=zeros(1,length(SNR));
+R_quant_list=zeros(1,length(SNR));
+% Commented out for part D ↑
 
+% Commented out for part ABC ↓
+%N_RF_list=[Ns, Ns+1, Ns+3];
+%R_list=zeros(3,length(SNR));
+%R_quant_list=zeros(3,length(SNR));
+% Commented out for part ABC ↑
 
-
-
-R_list=zeros(3,length(SNR));
-R_quant_list=zeros(3,length(SNR));
 
 for i_nrf=1:length(N_RF_list)
 
-    N_RF=N_RF_list(i_nrf);
+    N_RF=N_RF_list(i_nrf)
     Nt_RF=N_RF;   % Number of transmit RF chains
     Nr_RF=N_RF;   % Number of receive RF chains
     % NOTE Nt_RF=Nr_RF=N_RF, the total number of RF chains is 2*N_RF which
@@ -40,14 +44,14 @@ for i_nrf=1:length(N_RF_list)
     
 
     for i_snr=1:length(SNR)
-        
+        i_snr
         SNR_lin=10^(SNR(i_snr)/10);
         sigma=sqrt(P/SNR_lin);
         R=0;
         R_quant=0;
     
         for i_mc=1:num_mc
-            %i_mc
+            i_mc
             H=zeros(M,N);
             for l=1:L
                 alpha=sqrt(1/2)*(randn(1,1)+1j*randn(1,1));
@@ -270,31 +274,37 @@ for i_nrf=1:length(N_RF_list)
     
     
         end
-    
-        %R_list(i_snr)=R/num_mc;
-        R_list(i_nrf,i_snr)=R/num_mc;
-        R_quant_list(i_nrf,i_snr)=R_quant/num_mc;
+
+        % Commented out for part D ↓
+        R_list(i_snr)=R/num_mc;
+        R_quant_list(i_snr)=R_quant/num_mc;
+        % Commented out for part D ↑
+        
+        % Commented out for part ABC ↓
+        %R_list(i_nrf,i_snr)=R/num_mc;
+        %R_quant_list(i_nrf,i_snr)=R_quant/num_mc;
+        % Commented out for part ABC ↑
     
     end
 end
 
-% !!! Change the parameters the same as Fig. 2 for this figure
+
 figure;
-plot(SNR,R_list);%(1,:),SNR,R_list(2,:),SNR,R_list(3,:)
+plot(SNR,R_list);
+grid on;
 xlabel("SNR(dB)");
 ylabel("Spectral efficiency (bits/s/Hz)");
 legend("N^{RF}=N_{s}","N^{RF}=N_{s}+1","N^{RF}=N_{s}+3");
-title("SNR vs. Spectral Efficiency (Infinite phase shifter, 64*16 MIMO, single user, Ns=4)");
+title("SNR vs. Spectral Efficiency (Infinite phase shifter, "+N+"*"+M+" MIMO, single user, Ns="+Ns+")");
 
-% TODO why our figures are so curvy and the range of R values are different
-
-% !!! Change the parameters the same as Fig. 3 for this figure
+% Comment out for result 1 ↓
 figure;
 plot(SNR,R_quant_list);
+grid on;
 xlabel("SNR(dB)");
 ylabel("Spectral efficiency (bits/s/Hz)");
 legend("N^{RF}=N_{s}","N^{RF}=N_{s}+1","N^{RF}=N_{s}+3");
-title("SNR vs. Spectral Efficiency (1-bit phase shifter, 64*16 MIMO, single user, Ns=4)");
-
+title("SNR vs. Spectral Efficiency (1-bit phase shifter, "+N+"*"+M+" MIMO, single user, Ns="+Ns+")");
+% Comment out for result 1 ↑
 
 

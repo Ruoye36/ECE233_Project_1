@@ -43,7 +43,7 @@ for i_snr=1:length(SNR)
     R_quant=0;
 
     for i_mc=1:num_mc
-        i_mc
+        %i_mc
         H=zeros(M,N);
         for l=1:L
             alpha=sqrt(1/2)*(randn(1,1)+1j*randn(1,1));
@@ -154,8 +154,8 @@ for i_snr=1:length(SNR)
         P_star_quant_list=max(mu_quant-N0/lambda_quant_sq_list,0);
         Gamma_e=diag(P_star_list);
         Gamma_e_quant=diag(P_star_quant_list);
-        V_D=inv(sqrtm(Q))*U_e*Gamma_e;
-        V_D_quant=inv(sqrtm(Q_quant))*U_e_quant*Gamma_e_quant;
+        V_D=pinv(sqrtm(Q))*U_e*Gamma_e;
+        V_D_quant=pinv(sqrtm(Q_quant))*U_e_quant*Gamma_e_quant;
     
     
     
@@ -230,14 +230,14 @@ for i_snr=1:length(SNR)
         % Design W_D
         J=W_RF'*H*(Vt)*Vt'*H'*W_RF+sigma^2*(W_RF')*W_RF;
         J_quant=W_RF_quant'*H*(Vt_quant)*Vt_quant'*H'*W_RF_quant+sigma^2*(W_RF_quant')*W_RF_quant;
-        W_D=inv(J)*W_RF'*H*Vt;
-        W_D_quant=inv(J_quant)*W_RF_quant'*H*Vt_quant;
+        W_D=pinv(J)*W_RF'*H*Vt;
+        W_D_quant=pinv(J_quant)*W_RF_quant'*H*Vt_quant;
         Wt=W_RF*W_D;
         Wt_quant=W_RF_quant*W_D_quant;
 
         % Spectral efficiency
-        R=R+log2(det(eye(M,M)+(Wt*inv(Wt'*Wt)*Wt'*H*Vt*Vt'*H')/sigma^2));
-        R_quant=R_quant+log2(det(eye(M,M)+(Wt_quant*inv(Wt_quant'*Wt_quant)*Wt_quant'*H*(Vt_quant)*Vt_quant'*H')/sigma^2));
+        R=R+log2(det(eye(M,M)+(Wt*pinv(Wt'*Wt)*Wt'*H*(Vt)*Vt'*H')/sigma^2));
+        R_quant=R_quant+log2(det(eye(M,M)+(Wt_quant*pinv(Wt_quant'*Wt_quant)*Wt_quant'*H*(Vt_quant)*Vt_quant'*H')/sigma^2));
         
     
         
@@ -254,17 +254,19 @@ end
 
 % !!! Change the parameters the same as Fig. 2 for this figure
 figure;
-plot(SNR,R_list);
-xlabel("SNR(dB");
-ylabel("Spectral efficiency (unit=?)");
-title("SNR vs. Spectral Efficiency (Infinite phase shifter, 64*16 MIMO, single user, Ns=N_{RF}=6)");
+plot(SNR,R_list,'-o');
+grid on;
+xlabel("SNR(dB)");
+ylabel("Spectral efficiency (bits/s/Hz)");
+title("SNR vs. Spectral Efficiency (Infinite phase shifter, 10*10 MIMO, single user, Ns=N_{RF}=2)");
 
 
 % !!! Change the parameters the same as Fig. 3 for this figure
 figure;
-plot(SNR,R_quant_list);
-xlabel("SNR(dB");
-ylabel("Spectral efficiency (unit=?)");
+plot(SNR,R_quant_list,'-o');
+grid on;
+xlabel("SNR(dB)");
+ylabel("Spectral efficiency (bits/s/Hz)");
 title("SNR vs. Spectral Efficiency (1-bit phase shifter, 10*10 MIMO, single user, Ns=N_{RF}=2)");
 
 
