@@ -1,15 +1,14 @@
 clear;
 %% Project 1
-%% NOTE Change parameters according to the results in project spec!!!
-N=10; % Number of antennas of the base station | 64 | 10
-M=10; % Number of antennas of each user | 16 | 10
+N=64; % Number of antennas of the base station | 64 | 10
+M=16; % Number of antennas of each user | 16 | 10
 K=1; % Number of users
-d=2; % Number data streams required by each user | 6 | 2 | 4
+d=4; % Number data streams required by each user | 6 | 2 | 4
 Ns=K*d; % Number of total data streams
 L=15; % Number of paths (paper suggests 15)
-SNR=0:5:30;   % -10:2:6 | 0:5:30
+SNR=-10:2:6;   % -10:2:6 | 0:5:30
 tolerance=1e-6;
-num_mc=100; %   Number of Monte Carlo trials | 100 | 1000
+num_mc=1000; %   Number of Monte Carlo trials | 100 | 1000
 phase_list=[1 exp(1j*pi)];
 P=1;
 
@@ -23,9 +22,9 @@ R_quant_list=zeros(1,length(SNR));
 % Uncomment for results 1, 2 ↑
 
 % Uncomment for result 3 ↓
-%N_RF_list=[Ns, Ns+1, Ns+3];
-%R_list=zeros(3,length(SNR));
-%R_quant_list=zeros(3,length(SNR));
+N_RF_list=[Ns, Ns+1, Ns+3];
+R_list=zeros(3,length(SNR));
+R_quant_list=zeros(3,length(SNR));
 % Uncomment for result 3 ↑
 
 
@@ -286,13 +285,13 @@ for i_nrf=1:length(N_RF_list)
         end
 
         % Uncomment for results 1, 2 ↓
-        R_list(i_snr)=R/num_mc;
-        R_quant_list(i_snr)=R_quant/num_mc;
+        %R_list(i_snr)=R/num_mc;
+        %R_quant_list(i_snr)=R_quant/num_mc;
         % Uncomment for results 1, 2 ↑
         
         % Uncomment for result 3 ↓
-        %R_list(i_nrf,i_snr)=R/num_mc;
-        %R_quant_list(i_nrf,i_snr)=R_quant/num_mc;
+        R_list(i_nrf,i_snr)=R/num_mc;
+        R_quant_list(i_nrf,i_snr)=R_quant/num_mc;
         % Uncomment for result 3 ↑
     
     end
